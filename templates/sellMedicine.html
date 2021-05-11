@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+  {% include 'navbar.html'%}
+{% if messages %}
+  <div class="row">
+  <div class="col-sm-12 col-sm-offset-3" align="center">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}" role="alert">
+          <p>{{ message }}</p>
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+{% endif %}
+
+    <div class="container text-center mt-3">
+        <h1>SELL MEDICINE</h1>
+        <div class="mt-5">
+            <form action="" method="POST" autocomplete="off">
+                {% csrf_token %}
+                <div>
+                    <h3>Customer Info</h3>
+                    <div class="row">
+                        <div class="col-md-6 mt-3">
+                            <label>Customer Name</label>
+                            <input type="text" class="form-control" id="customer_name" placeholder="Enter customer name" name="customer_name">
+                        </div>
+                        <div class="col-md-6 mt-3">
+                            <label>Phone No.</label>
+                            <input type="number" class="form-control" id="phone" placeholder="Enter phone no." name="customer_phone">
+                        </div>
+                    </div>
+                </div>
+                <h3 class="mt-5">Medicine Info</h3>
+                <div class="form-wrapper">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group" id="medicine_input">
+                        <label for="medicine_name">Medicine Name</label>
+                        <input type="text" class="form-control" id="medicine_name" placeholder="Enter Medicine Name" list="medicine" name="medicine_name[]">
+                        <small id="showQty"></small>
+                        <datalist id="medicine">
+                          {% for m in medicine %}
+                          <option value="{{m.medicine_name}}"></option>
+                          {% endfor %}
+                        </datalist>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <div class="form-group">
+                        <label for="quantity">Quantity</label>
+                        <input type="number" class="form-control" id="quantity" placeholder="" value="0" name="quantity[]">
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <div class="form-group">
+                        <label for="discount">Discount(%)</label>
+                        <input type="number" class="form-control" id="discount" placeholder="" value="0" name="discount[]">
+                      </div>
+                    </div>
+                    
+                      <button class="btn btn-outline-secondary mt-4 col-md-2" id="add-btn">Add more</button>
+                   
+                  </div>
+                </div>
+                <div class="row" style="margin-left: 15rem;">
+                    <div class="col-md-4">
+                        <label>Total Discount(%)</label>
+                        <input type="number" class="form-control" name="total_discount" value="0">
+                    </div>
+                    <div class="col-md-4">
+                      <label>Total Discount(BDT)</label>
+                      <input type="number" class="form-control" name="bdt_discount" value="0">
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-5 mb-5">Submit</button>
+              </form>
+        </div>
+    </div>
+    <script>
+      $(document).ready(function(){
+        let form_wrapper = $(".form-wrapper");
+        let add_btn = $("#add-btn");
+        $(add_btn).click(function(e){
+          e.preventDefault();
+          $(form_wrapper).append(`
+          <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group" id="medicine_input">
+                      <label for="medicine_name">Medicine Name</label>
+                      <input type="text" class="form-control" id="medicine_name" placeholder="Enter Medicine Name" list="medicine" name="medicine_name[]">
+                      <small id="showQty"></small>
+                      <datalist id="medicine">
+                        {% for m in medicine %}
+                        <option value="{{m.medicine_name}}"></option>
+                        {% endfor %}
+                      </datalist>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                      <div class="form-group">
+                        <label for="quantity">Quantity</label>
+                        <input type="number" class="form-control" id="quantity" placeholder="" value="0" name="quantity[]">
+                      </div>
+                    </div>
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <label for="discount">Discount</label>
+                      <input type="number" class="form-control" id="discount" placeholder="" value="0" name="discount[]">
+                    </div>
+                  </div>
+                  
+                    <button class="btn btn-outline-danger mt-4 col-md-2" id="remove-btn">Remove</button>
+                  
+                </div>
+          `);
+        });
+        $(form_wrapper).on('click','#remove-btn',function(e){
+          e.preventDefault();
+          $(this).parent('div').remove();
+        });
+        $(form_wrapper).on('change','#medicine_input', function(e){
+          e.preventDefault();
+          let input_val = document.querySelectorAll("[id='medicine_name']");
+          medicine_name = (input_val[input_val.length-1].value);
+          //console.log(medicine_name);
+          $.ajax({
+            type: "GET",
+            url: "{% url 'ajax_quantity' %}",
+            data: {
+              'medicine_name': medicine_name
+            },
+            dataType: 'json',
+            success: function(response){
+              //console.log(response.quantity);
+              let smallQtyDiv = (document.querySelectorAll("[id='showQty']"));
+              smallQtyDiv[smallQtyDiv.length-1].innerHTML = '<p class="float-left">Available '+response.quantity+' pcs</p>';
+            },
+            error: function(){
+              alert("error");
+            }
+          });
+        });
+      });
+    </script>
+</body>
+</html>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>

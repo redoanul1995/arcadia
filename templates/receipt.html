@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <style>
+        .clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+body {
+  position: relative;
+  margin: 0 auto;
+  color: #001028;
+  background: #FFFFFF;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-family: Arial;
+}
+h1 {
+
+  color: #5D6975;
+  font-size: 2.4em;
+  line-height: 1.4em;
+  font-weight: normal;
+  text-align: center;
+  margin: 0 0 20px 0;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-bottom: 20px;
+}
+table th,
+table td {
+  text-align: center;
+}
+
+table th {
+
+
+  color: #5D6975;
+  border-bottom: 1px solid #C1CED9;
+  white-space: nowrap;
+  font-weight: normal;
+}
+table td {
+ padding-top:5px;
+ padding-bottom:5px;
+
+}
+
+table tr {
+  border-bottom: 1px solid #C1CED9;
+}
+
+    </style>
+</head>
+<body>
+{% if messages %}
+  <div class="row">
+  <div class="col-sm-12 col-sm-offset-3" align="center">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}" role="alert">
+          <p>{{ message }}</p>
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+{% endif %}
+
+    <div class="container">
+        <h1 class="text-center mt-3">Arcadia Clinic</h1>
+        <div class="mt-5">
+            <h5 class="float-right">Invoice No. {{timestamp}}</h5>
+            <h3>Name: {{customer_name}}</h3>
+            <h4>Phone: {{customer_phone}}</h4>
+
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th scope="col">Medicine Name</th>
+                  <th scope="col">Qty</th>
+                    <th scope="col">Unit Price</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for name, quantity, price in nqp %}
+                <tr>
+                  <td>{{name}}</td>
+                  <td>{{quantity}}</td>
+                  <td>{{price}}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+            <hr>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h5 class="float-right" style="text-align:right">Total Price: BDT {{total_sold_price}}</h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h5 class="float-right" style="text-align:right">Total payable: BDT {{total_payable_price}}</h5>
+            </div>
+        </div>
+        <div>
+            <h4 class="text-center mt-3" style="text-align:center">Thanks for purchasing</h4>
+        </div>
+    </div>
+
+</body>
+</html>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
