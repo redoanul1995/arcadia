@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'itv_r1hg#xe8)o%qt#3e6*zg%&d4w^rilztb)h4w!hom(sm(fl'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['128.199.189.255', 'arrcadia.xyz', 'www.arrcadia.xyz', 'localhost']
 

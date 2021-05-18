@@ -5,7 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </head>
 <body>
   {% include 'navbar.html'%}
@@ -21,52 +24,206 @@
 
   </div>
 {% endif %}
-    <div class="container text-center mt-3">
+    <div class="container text-center mt-3 mb-5">
         <h1>ENTER NEW PAYMENT</h1>
         <div class="mt-5">
-            <form action="" method="POST" autocomplete="off">
-                {% csrf_token %}
-                <div class="form-group">
-                    <select class="form-select" aria-label="Default select example" style="height: 2rem;">
-                        <option selected>Open this select menu</option>
-                        <option value="January">January</option>
-                        <option value="February">February</option>
-                        <option value="March">March</option>
-                        <option value="April">April</option>
-                        <option value="May">May</option>
-                        <option value="June">June</option>
-                        <option value="July">July</option>
-                        <option value="August">August</option>
-                        <option value="Sepetember">Sepetember</option>
-                        <option value="October">October</option>
-                        <option value="November">November</option>
-                        <option value="December">December</option>
-                      </select>
+            <div class="row">
+                <div class="col-md-4">
+                    <button class="btn btn-outline-primary btn-lg" id="wifi_btn">Wifi Bill</button>
                 </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="electric_bill">Electric Bill</label>
-                            <input type="number" class="form-control" id="electric_bill" name="electric_bill" value="0">
-                          </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="wifi_bill">Wifi Bill</label>
-                            <input type="number" class="form-control" id="wifi_bill" name="wifi_bill" value="0">
-                          </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="shop_fare">Shop Fare</label>
-                            <input type="number" class="form-control" id="shop_fare" name="shop_fare" value="0">
-                          </div>
-                    </div>
+                <div class="col-md-4">
+                    <button class="btn btn-outline-secondary btn-lg" id="electricity_btn">Electric Bill</button>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-              </form>
+                <div class="col-md-4">
+                    <button class="btn btn-outline-success btn-lg" id="shop_fare_btn">Shop Bill</button>
+                </div>
+            </div>
+            <div id="wifi" class="mt-5" style="display:none">
+              {% csrf_token %}
+                <h3>Enter Wifi Bill</h3>
+                <div id="wifi_form_wrapper" class="mt-3">
+                    <form class="" id="wifi_form">
+                      {% csrf_token %}
+                        <input type="number" class="form-control" style="width:50%;margin-left:17rem" id="wifi_bill_input">
+                        <input type="submit" class="btn btn-primary mt-3" value="Submit" id="wifi_submit_btn">
+                    </form>
+                </div>
+            </div>
+            <div id="electricity" class="mt-5" style="display:none">
+                <h3>Enter Electricity Bill</h3>
+                <div id="electricity_form_wrapper" class="mt-3">
+                    <form class="" method="post" id="electric_form">
+                        {% csrf_token %}
+                        <input type="number" class="form-control" style="width:50%;margin-left:17rem" id="electric_bill_input">
+                        <input type="submit" class="btn btn-primary mt-3">
+                    </form>
+                </div>
+            </div>
+            <div id="shop_fare" class="mt-5" style="display:none">
+                <h3>Enter Monthly Shop Bill</h3>
+                <div id="shop_fare_form_wrapper" class="mt-3">
+                    <form class="" method="post" id="shop_form">
+                        {% csrf_token %}
+                        <input type="number" class="form-control" style="width:50%;margin-left:17rem" id="shop_bill_input">
+                        <input type="submit" class="btn btn-primary mt-3">
+                    </form>
+                </div>
+            </div>
+            <div class="mt-5" id="wifi_history_div" style="display: none;">
+                <h3>Wifi Bill History</h3>
+                <div class="mt-3 w-100 p-3">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th scope="col">Date</th>
+                          <th scope="col">Amount (BDT)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for w in wifi %}
+                        <tr>
+                          
+                          <td>{{w.date}}</td>
+                          <td>{{w.amount}}</td>
+                        </tr>
+                      {% endfor %}
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="mt-5" id="electricity_history_div" style="display: none;">
+                <h3>Electricity Bill History</h3>
+                <div class="mt-3 w-100 p-3">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th scope="col">Date</th>
+                          <th scope="col">Amount (BDT)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {% for e in electricity %}
+                        <tr>
+                          <td>{{e.date}}</td>
+                          <td>{{e.amount}}</td>
+                        </tr>
+                      {% endfor %}
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="mt-5" id="shop_fare_history_div" style="display: none;">
+                <h3>Shop Fare History</h3>
+                <div class="mt-3 w-100 p-3">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th scope="col">Date</th>
+                          <th scope="col">Amount (BDT)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {% for s in shop %}
+                        <tr>
+                          <td>{{s.date}}</td>
+                          <td>{{s.amount}}</td>
+                        </tr>
+                      {% endfor %}
+                      </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
+    <script>
+        let wifi_btn = document.getElementById('wifi_btn');
+        let electricity_btn = document.getElementById('electricity_btn');
+        let shop_fare_btn = document.getElementById('shop_fare_btn');
+
+        let wifi_div = document.getElementById('wifi');
+        let electricity_div = document.getElementById('electricity');
+        let shop_fare_div = document.getElementById('shop_fare');
+
+        let wifi_history = document.getElementById('wifi_history_div');
+        let electricity_history = document.getElementById('electricity_history_div');
+        let shop_fare_history = document.getElementById('shop_fare_history_div');
+
+        wifi_btn.addEventListener('click', function(){
+            wifi_div.style.display = 'block';
+            electricity_div.style.display = 'none';
+            shop_fare_div.style.display = 'none';
+
+            wifi_history.style.display = 'block';
+            electricity_history.style.display = 'none';
+            shop_fare_history.style.display = 'none';
+        });
+        electricity_btn.addEventListener('click', function(){
+            electricity_div.style.display = 'block';
+            shop_fare_div.style.display = 'none';
+            wifi_div.style.display = 'none';
+
+            wifi_history.style.display = 'none';
+            electricity_history.style.display = 'block';
+            shop_fare_history.style.display = 'none';
+        });
+        shop_fare_btn.addEventListener('click', function(){
+            electricity_div.style.display = 'none';
+            shop_fare_div.style.display = 'block';
+            wifi_div.style.display = 'none';
+
+            wifi_history.style.display = 'none';
+            electricity_history.style.display = 'none';
+            shop_fare_history.style.display = 'block';
+        });
+
+        $('#wifi_form').submit(function(e){
+          e.preventDefault();
+          $.ajax({
+            type: 'POST',
+            url: "{% url 'wifi_bill' %}",
+            data: {
+              amount : $('#wifi_bill_input').val(),
+              csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(){
+              $("#wifi_form").trigger('reset');
+              alert('bill inserted successfully');
+            }
+          });
+        });
+
+        $('#electric_form').submit(function(e){
+          e.preventDefault();
+          $.ajax({
+            type: 'POST',
+            url: "{% url 'electric_bill' %}",
+            data: {
+              amount : $('#electric_bill_input').val(),
+              csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(){
+              $("#electric_form").trigger('reset');
+              alert('bill inserted successfully');
+            }
+          });
+        });
+
+        $('#shop_form').submit(function(e){
+          e.preventDefault();
+          $.ajax({
+            type: 'POST',
+            url: "{% url 'shop_bill' %}",
+            data: {
+              amount : $('#shop_bill_input').val(),
+              csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(){
+              $("#shop_form").trigger('reset');
+              alert('bill inserted successfully');
+            }
+          });
+        });
+    </script>
 </body>
 </html>
 

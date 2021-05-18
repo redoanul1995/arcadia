@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from user.views import user_authentication, dashboard, logout
 from medicine.views import add_category, add_medicine, sell_medicine, medicine_quantity, medicine_summary, profit, quantity_alert, purchase_history
-from payment.views import monthly_payment
+from payment.views import bill_payment, wifi_bill, electric_bill, shop_bill
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,5 +32,8 @@ urlpatterns = [
     path('medicine-profit', profit, name='profit'),
     path('quantity-alert', quantity_alert, name='quantity_alert'),
     path('purchase-history', purchase_history, name='purchase_history'),
-    path('monthly_payment', monthly_payment, name='monthly_payment'),
+    path('monthly_payment', bill_payment, name='monthly_payment'),
+    path('wifi_bill', wifi_bill, name='wifi_bill'),
+    path('electric_bill', electric_bill, name='electric_bill'),
+    path('shop_bill', shop_bill, name='shop_bill'),
 ]

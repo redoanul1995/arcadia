@@ -1,13 +1,28 @@
 from django.db import models
 
+
 # Create your models here.
 
-
-class Monthly_Bill(models.Model):
-    month_name = models.CharField(max_length=255, null=True)
-    wifi = models.IntegerField()
-    electricity = models.IntegerField()
-    shop_fare = models.IntegerField()
+class WifiBill(models.Model):
+    amount = models.IntegerField()
+    date = models.DateField(null=True)
 
     def __str__(self):
-        return f"payment of {self.month_name}"
+        return f"wifi bill of {self.date}"
+
+
+class ElectricBill(models.Model):
+    amount = models.IntegerField()
+    date = models.DateField(null=True)
+
+
+    def __str__(self):
+        return f"electric bill of {self.date}"
+
+
+class ShopBill(models.Model):
+    amount = models.IntegerField()
+    date = models.DateField(null=True)
+
+    def __str__(self):
+        return f"shop bill of {self.date}"
