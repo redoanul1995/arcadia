@@ -168,7 +168,7 @@ def medicine_quantity(request):
         medicine_name = request.GET.get('medicine_name', None)
         if Category.objects.filter(medicine_name=medicine_name).exists():
             obj = get_object_or_404(Category, medicine_name=medicine_name)
-            return JsonResponse({'quantity': obj.qty}, status=200)
+            return JsonResponse({'quantity': obj.qty, 'price': obj.unit_price_without_discount}, status=200)
         else:
             return JsonResponse({'quantity': 'not available'}, status=200)
     return JsonResponse({}, status=400)

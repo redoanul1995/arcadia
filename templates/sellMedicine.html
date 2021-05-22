@@ -146,7 +146,7 @@
             success: function(response){
               //console.log(response.quantity);
               let smallQtyDiv = (document.querySelectorAll("[id='showQty']"));
-              smallQtyDiv[smallQtyDiv.length-1].innerHTML = '<p class="float-left">Available '+response.quantity+' pcs</p>';
+              smallQtyDiv[smallQtyDiv.length-1].innerHTML = '<p class="float-left"><b>Available:</b> '+response.quantity+' pcs     <b>unit price:</b> '+response.price+'</p>';
             },
             error: function(){
               alert("error");

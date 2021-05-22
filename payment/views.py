@@ -1,11 +1,12 @@
 from datetime import date
 from django.core.checks import messages
+from django.contrib import messages
 from django.http.response import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.utils.regex_helper import contains
 from django.utils import timezone
 from django.core import serializers
-from payment.models import WifiBill, ElectricBill, ShopBill
+from payment.models import WifiBill, ElectricBill, ShopBill, EmployeeBill
 
 # Create your views here.
 
@@ -43,3 +44,19 @@ def shop_bill(request):
         obj = ShopBill(amount=amount, date=timezone.now())
         obj.save()
     return HttpResponse('')
+
+
+def employee_bill(request):
+    bill_obj = EmployeeBill.objects.all()
+    if request.method == 'POST':
+        name = request.POST['name']
+        amount = request.POST['amount']
+        print(name)
+        obj = EmployeeBill(name=name, amount=amount, date=timezone.now())
+        obj.save()
+        messages.success(request, 'bill inserted successfully')
+        return redirect('employee_bill')
+    context = {
+        'employee_bill': bill_obj,
+    }
+    return render (request, 'employee.html', context)
